@@ -37,14 +37,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var labelEUR: UILabel!
     
     @IBAction func buttonConvertClick(_ sender: Any) {
-        var valueInBYN: Double?;
+        var inputValue: Double?;
         if (editBYN.text ?? "").isEmpty {
-            valueInBYN = 1.0
+            inputValue = 1.0
         } else {
-            valueInBYN = Double(editBYN.text!)
+            inputValue = Double(editBYN.text!)
         }
-        if valueInBYN != nil {
-            viewRates(valueInBYN: valueInBYN!)
+        if let valueToConvert = inputValue {
+            viewRates(valueInBYN: valueToConvert)
         } else {
             handleInvalidInput()
         }
