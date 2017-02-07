@@ -8,52 +8,42 @@
 
 import UIKit
 
-enum Currency{
-    case USD, EUR, RUB
-    func getRate() -> Double {
-        switch self {
-        case .EUR: return 0.4866
-        case .USD: return 0.5216
-        case .RUB: return 30.8166
-        }
-    }
-}
 
 class ViewController: UIViewController {
+    let converter = ConverterModel()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     @IBOutlet weak var editBYN: UITextField!
     @IBOutlet weak var labelRUB: UILabel!
     @IBOutlet weak var labelUSD: UILabel!
     @IBOutlet weak var labelEUR: UILabel!
     
     @IBAction func buttonConvertClick(_ sender: Any) {
-        var inputValue: Double?;
-        if (editBYN.text ?? "").isEmpty {
-            inputValue = 1.0
-        } else {
-            inputValue = Double(editBYN.text!)
-        }
-        if let valueToConvert = inputValue {
-            viewRates(valueInBYN: valueToConvert)
+        if let valueInBYN = getValueInBYN() {
+            let converted = converter.getConvertedValues(valueInBYN: valueInBYN)
+            showResult(converted: converted)
         } else {
             handleInvalidInput()
         }
     }
     
+    func getValueInBYN() -> Double?{
+        var result: Double?
+        if (editBYN.text ?? "").isEmpty {
+            result = 1.0
+        } else {
+            result = Double(editBYN.text!)
+        }
+        return result
+    }
+    
     func handleInvalidInput() {
         editBYN.text = nil
-        viewRates(valueInBYN: 1.0)
+        showRates()
         showAlert()
+    }
+    
+    func showRates() {
+        showResult(converted: converter.getRates())
     }
     
     func showAlert(){
@@ -63,10 +53,10 @@ class ViewController: UIViewController {
         show(alertController, sender:self)
     }
     
-    func viewRates(valueInBYN: Double){
-        labelUSD.text = "\(Currency.USD): \(valueInBYN*Currency.USD.getRate())"
-        labelEUR.text = "\(Currency.EUR): \(valueInBYN*Currency.EUR.getRate())"
-        labelRUB.text = "\(Currency.RUB): \(valueInBYN*Currency.RUB.getRate())"
+    func showResult(converted: [Currency:Double]){
+        labelUSD.text = "\(Currency.USD): \(converted[Currency.USD]!)"
+        labelEUR.text = "\(Currency.EUR): \(converted[Currency.EUR]!)"
+        labelRUB.text = "\(Currency.RUB): \(converted[Currency.RUB]!)"
     }
 }
 
