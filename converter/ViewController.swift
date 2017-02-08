@@ -32,6 +32,7 @@ class ViewController: UIViewController {
             result = 1.0
         } else {
             result = Double(editBYN.text!)
+            result = (result == 0) ? 1 : result
         }
         return result
     }
